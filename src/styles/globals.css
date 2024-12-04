@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 17, 24, 39;
+  --background-end-rgb: 13, 17, 23;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  min-height: 100vh;
+}
+
+/* Wallet Adapter Button Styles */
+.wallet-adapter-button {
+  @apply h-12 px-6 rounded-lg font-semibold transition-all duration-200 !important;
+  background: linear-gradient(to right, #8b5cf6, #6d28d9) !important;
+}
+
+.wallet-adapter-button:not([disabled]):hover {
+  @apply opacity-90 !important;
+  background: linear-gradient(to right, #7c3aed, #5b21b6) !important;
+}
+
+.wallet-adapter-modal-wrapper {
+  background: rgba(17, 24, 39, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* Custom Input Styles */
+input {
+  @apply bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 !important;
+  transition: all 0.2s ease-in-out;
+}
+
+input:focus {
+  @apply border-primary-500/50 ring-2 ring-primary-500/20 !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(17, 24, 39, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4f46e5;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4338ca;
+}
+
+/* Glass Effect */
+.glass-effect {
+  background: rgba(17, 24, 39, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(to right, #8b5cf6, #6d28d9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Animation for loading states */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Toast notifications */
+.toast {
+  @apply fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg backdrop-blur-sm;
+}
+
+.toast-success {
+  @apply bg-green-600/90 text-white;
+}
+
+.toast-error {
+  @apply bg-red-600/90 text-white;
+}
+
+/* Card styles */
+.card {
+  @apply bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl shadow-xl;
+  transition: all 0.2s ease-in-out;
+}
+
+.card:hover {
+  @apply border-gray-600/50;
+  transform: translateY(-2px);
+}

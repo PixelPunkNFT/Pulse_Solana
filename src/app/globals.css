@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+.animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(147, 51, 234, 0.15) 0%, rgba(0, 0, 0, 0.9) 100%);
+  filter: blur(20px);
+}
+
+.moving-gradient {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, 
+    rgba(126, 34, 206, 0.7),
+    rgba(107, 33, 168, 0.7),
+    rgba(88, 28, 135, 0.7)
+  );
+  animation: moveGradient 20s linear infinite;
+  opacity: 0.6;
+  filter: blur(30px);
+  box-shadow: 0 0 100px rgba(147, 51, 234, 0.3);
+}
+
+@keyframes moveGradient {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.glow-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, 
+    rgba(147, 51, 234, 0.3) 0%, 
+    rgba(147, 51, 234, 0.1) 30%,
+    transparent 70%
+  );
+  animation: pulse 4s ease-in-out infinite;
+  filter: blur(40px);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}
+
+.gradient-title {
+  background: linear-gradient(to right, #e2e8f0, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.elegant-button {
+  background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.elegant-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(147, 51, 234, 0.3);
+}
+
+.elegant-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.elegant-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(147, 51, 234, 0.2);
+}
+
+/* Social Links Animation */
+.social-link {
+  position: relative;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  text-align: center;
+}
+
+.social-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.social-link:hover {
+  transform: translateY(-3px);
+  color: white;
+  box-shadow: 0 5px 15px rgba(147, 51, 234, 0.3);
+}
+
+.social-link:hover::before {
+  opacity: 1;
+}
+
+.social-links-container {
+  position: relative;
+}
+
+.social-links-container::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 100%
+  );
+}
+
+/* Pulse Animation for Icons */
+.social-link svg {
+  transition: transform 0.3s ease;
+}
+
+.social-link:hover svg {
+  transform: scale(1.1);
+}
+
+.social-link div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-link span {
+  display: inline-block;
+  text-align: center;
+}
