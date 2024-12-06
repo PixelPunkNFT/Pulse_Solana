@@ -1,4 +1,4 @@
-import { Connection, PublicKey, Transaction, Signer } from '@solana/web3.js';
+import { Connection, PublicKey, Transaction } from '@solana/web3.js';
 import { 
   createBurnCheckedInstruction, 
   createSetAuthorityInstruction, 
@@ -12,9 +12,15 @@ import {
 } from '@solana/spl-token';
 import { TokenData } from '../types/token';
 import { getCreatedTokens } from './tokenStorage';
-import { findMetadataPda } from './tokenMetadata';
 
-async function getPinataMetadata(name: string): Promise<any> {
+interface PinataPin {
+  metadata: {
+    name: string;
+  };
+  ipfs_pin_hash: string;
+}
+
+async function getPinataMetadata(name: string): Promise<Record<string, unknown> | null> {
   try {
     // Costruisci il nome del file metadata come fatto in uploadMetadataJson
     const metadataName = `${name.toLowerCase()}-metadata.json`;
@@ -34,7 +40,7 @@ async function getPinataMetadata(name: string): Promise<any> {
     const data = await response.json();
     
     // Cerca il file metadata.json corrispondente
-    const metadataPin = data.rows.find((pin: any) => 
+    const metadataPin = data.rows.find((pin: PinataPin) => 
       pin.metadata.name === metadataName
     );
 
@@ -210,52 +216,6 @@ export async function toggleFreezeAccount(
   }
 }
 
-async function getTokenMetadata(connection: Connection, mintPubkey: PublicKey): Promise<string | null> {
-  try {
-    console.log('Getting metadata for mint:', mintPubkey.toString());
-    const metadataPDA = findMetadataPda(mintPubkey);
-    console.log('Metadata PDA:', metadataPDA.toString());
-    
-    const accountInfo = await connection.getAccountInfo(metadataPDA);
-    if (!accountInfo) {
-      console.log('No metadata account found');
-      return null;
-    }
-
-    console.log('Metadata account data length:', accountInfo.data.length);
-
-    // Parse metadata account data
-    const buffer = accountInfo.data;
-    
-    // Skip the first byte (metadata version)
-    let offset = 1;
-    
-    // Skip name length and name
-    const nameLength = buffer.readUInt32LE(offset);
-    console.log('Name length:', nameLength);
-    offset += 4 + nameLength;
-    
-    // Skip symbol length and symbol
-    const symbolLength = buffer.readUInt32LE(offset);
-    console.log('Symbol length:', symbolLength);
-    offset += 4 + symbolLength;
-    
-    // Get URI length and URI
-    const uriLength = buffer.readUInt32LE(offset);
-    console.log('URI length:', uriLength);
-    offset += 4;
-    
-    // Read URI
-    const uri = buffer.slice(offset, offset + uriLength).toString('utf8');
-    console.log('URI:', uri);
-    
-    return uri;
-  } catch (error) {
-    console.error('Error getting token metadata:', error);
-    return null;
-  }
-}
-
 export async function getTokenData(
   connection: Connection,
   mintAddress: string,
@@ -288,7 +248,7 @@ export async function getTokenData(
       // Se abbiamo il nome del token, proviamo a recuperare il metadata da Pinata
       if (storedToken?.name) {
         const metadata = await getPinataMetadata(storedToken.name);
-        if (metadata && metadata.image) {
+        if (metadata && 'image' in metadata && typeof metadata.image === 'string') {
           imageUrl = metadata.image;
           console.log('Found image URL in Pinata metadata:', imageUrl);
         }

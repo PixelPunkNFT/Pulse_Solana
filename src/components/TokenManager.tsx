@@ -8,6 +8,7 @@ import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { PublicKey } from '@solana/web3.js';
 import { useToast } from './Toast';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface TokenManagerProps {
   token: TokenData;
@@ -121,11 +122,14 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
       <div className="bg-gray-800/20 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30 group-hover:border-primary-500/30 transition-all duration-500 transform hover:scale-105 group-hover:z-10 group-hover:shadow-2xl group-hover:shadow-primary-500/10 hover:bg-gray-800/30">
         <div className="flex items-center space-x-4 mb-6">
           {token.imageUrl && (
-            <img
-              src={token.imageUrl}
-              alt={token.name}
-              className="w-16 h-16 rounded-xl object-cover ring-2 ring-primary-500/10 group-hover:ring-primary-500/30 transition-all duration-500"
-            />
+            <div className="relative w-16 h-16">
+              <Image
+                src={token.imageUrl}
+                alt={token.name}
+                fill
+                className="rounded-xl object-cover ring-2 ring-primary-500/10 group-hover:ring-primary-500/30 transition-all duration-500"
+              />
+            </div>
           )}
           <div className="flex-1">
             <h3 className="text-2xl font-bold text-white mb-1 bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-primary-600">{token.name}</h3>

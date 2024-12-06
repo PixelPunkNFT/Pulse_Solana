@@ -3,12 +3,10 @@
 import { TokenCreator } from '../../components/TokenCreator';
 import Link from 'next/link';
 import { useNetwork } from '../../context/NetworkContext';
-import { useWallet } from '@solana/wallet-adapter-react';
 import { CustomWalletButton } from '../../components/WalletProvider';
 
 export default function TokenCreatorPage() {
   const { network } = useNetwork();
-  const { publicKey } = useWallet();
 
   return (
     <div className="min-h-screen">

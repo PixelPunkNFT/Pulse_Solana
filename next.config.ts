@@ -1,23 +1,34 @@
+import type { Configuration as WebpackConfig } from 'webpack';
+import type { NextConfig } from 'next';
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  webpack: (config) => {
+const nextConfig: NextConfig = {
+  webpack: (config: WebpackConfig) => {
+    if (!config.resolve) {
+      config.resolve = {};
+    }
+    if (!config.resolve.fallback) {
+      config.resolve.fallback = {};
+    }
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
-      os: false,
-      path: false,
+      net: false,
+      tls: false,
       crypto: false,
-      stream: false,
-      http: false,
-      https: false,
-      zlib: false,
-      "crypto-browserify": require.resolve('crypto-browserify'),
     };
     return config;
   },
-  experimental: {
-    turbo: true
-  }
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'harlequin-informal-hawk-522.mypinata.cloud',
+        port: '',
+        pathname: '/ipfs/**',
+      },
+    ],
+  },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

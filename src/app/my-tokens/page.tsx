@@ -102,7 +102,7 @@ export default function MyTokensPage() {
             </div>
           ) : tokens.length === 0 ? (
             <div className="text-center">
-              <p className="text-gray-400 mb-4">You haven't created any tokens yet</p>
+              <p className="text-gray-400 mb-4">You haven&apos;t created any tokens yet</p>
               <Link
                 href="/token-creator"
                 className="inline-block px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold transition-all"

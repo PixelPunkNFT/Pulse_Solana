@@ -1,6 +1,3 @@
-import { PublicKey } from '@solana/web3.js';
-import { BN } from 'bn.js';
-
 export const MAX_VIRTUAL_RESERVES = 30; // 30 SOL max virtual reserves
 
 export interface BondingCurveConfig {

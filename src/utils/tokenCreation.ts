@@ -27,7 +27,7 @@ async function delay(ms: number) {
 
 async function checkConnection(connection: Connection): Promise<boolean> {
   try {
-    const version = await connection.getVersion();
+    await connection.getVersion();
     return true;
   } catch (error) {
     console.error('Connection check failed:', error);

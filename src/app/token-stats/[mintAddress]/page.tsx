@@ -3,16 +3,39 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useConnection } from '@solana/wallet-adapter-react';
+import { checkRaydiumLiquidity } from '../../../utils/raydium';
 
 export default function TokenStatsPage() {
   const params = useParams();
   const { mintAddress } = params;
+  const { connection } = useConnection();
   const [hasLiquidity, setHasLiquidity] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // TODO: Implementare la logica per verificare la liquidità su Raydium
   useEffect(() => {
-    // Qui andrà la logica per controllare la liquidità
-  }, [mintAddress]);
+    const checkLiquidity = async () => {
+      try {
+        if (!mintAddress || typeof mintAddress !== 'string') return;
+        
+        setIsLoading(true);
+        const liquidityExists = await checkRaydiumLiquidity(
+          connection,
+          mintAddress
+        );
+        setHasLiquidity(liquidityExists);
+      } catch (error) {
+        console.error('Error checking liquidity:', error);
+        setHasLiquidity(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (connection) {
+      checkLiquidity();
+    }
+  }, [mintAddress, connection]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
@@ -43,7 +66,11 @@ export default function TokenStatsPage() {
             </header>
 
             <div className="bg-gray-800/30 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
-              {!hasLiquidity ? (
+              {isLoading ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-400">Verifica della liquidità in corso...</p>
+                </div>
+              ) : !hasLiquidity ? (
                 <div className="text-center py-12">
                   <p className="text-gray-400 mb-4">
                     Le statistiche saranno disponibili dopo che sarà aggiunta liquidità su Raydium
