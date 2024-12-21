@@ -85,7 +85,8 @@ pulse/
 3. Create Token
 4. Manage Token
 
-## 🤝 Contributing
+## TEST APP
+https://pulse-sol.netlify.app/
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
