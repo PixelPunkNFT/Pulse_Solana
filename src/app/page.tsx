@@ -61,7 +61,7 @@ export default function Home() {
               <div className="elegant-card rounded-xl p-8">
                 <h3 className="text-xl font-medium text-white text-center mb-4">Development fees.</h3>
                 <p className="text-gray-300 text-center font-light leading-relaxed">
-                The cost to create a contract is 0.06 SOL,market-leading low fee. 
+                The cost to create a contract is 0.027 SOL,market-leading low fee. 
                 </p>
               </div>
             </div>
