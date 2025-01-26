@@ -87,6 +87,7 @@ pulse/
 
 ## TEST APP
 https://pulse-sol.netlify.app/
+https://pulse-sol.com/
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
