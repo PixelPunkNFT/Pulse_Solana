@@ -240,7 +240,7 @@ export async function getTokenData(
       }
 
       // Get stored token info
-      const createdTokens = getCreatedTokens();
+      const createdTokens = await getCreatedTokens(ownerPublicKey.toString());
       const storedToken = createdTokens.find(token => token.mintAddress === mintAddress);
 
       let imageUrl = '';
@@ -280,14 +280,26 @@ export async function getUserTokens(
 ): Promise<TokenData[]> {
   try {
     // Get list of created tokens
-    const createdTokens = getCreatedTokens();
+    console.log('Getting created tokens for wallet:', ownerPublicKey.toString());
+    const createdTokens = await getCreatedTokens(ownerPublicKey.toString());
+    console.log('Received created tokens:', createdTokens);
+    
+    if (!Array.isArray(createdTokens)) {
+      console.error('createdTokens is not an array:', createdTokens);
+      return [];
+    }
+    
     const createdTokenAddresses = new Set(createdTokens.map(token => token.mintAddress));
+    console.log('Created token addresses:', Array.from(createdTokenAddresses));
 
+    console.log('Fetching token accounts from Solana...');
     const response = await connection.getParsedTokenAccountsByOwner(
       ownerPublicKey,
       { programId: TOKEN_PROGRAM_ID }
     );
+    console.log('Received token accounts:', response.value.length);
 
+    console.log('Filtering and mapping token accounts...');
     const tokens = response.value
       .filter(accountInfo => 
         // Filtra solo i token con saldo maggiore di 0 e che sono stati creati da questa app

@@ -202,14 +202,6 @@ export async function createToken(
         throw new Error(`Transaction failed: ${confirmation.value.err.toString()}`);
       }
 
-      // Save created token to localStorage
-      saveCreatedToken({
-        mintAddress: mintKeypair.publicKey.toString(),
-        name,
-        symbol,
-        createdAt: Date.now()
-      });
-
       console.log('Token created successfully:', {
         mintAddress: mintKeypair.publicKey.toString(),
         signature,

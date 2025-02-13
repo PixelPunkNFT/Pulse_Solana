@@ -8,6 +8,7 @@ import { TokenManager } from '../../components/TokenManager';
 import { getUserTokens } from '../../utils/tokenManagement';
 import { useConnection } from '@solana/wallet-adapter-react';
 import { TokenData } from '../../types/token';
+import { getCreatedTokens, StoredToken } from '../../utils/tokenStorage';
 import { useToast } from '../../components/Toast';
 import { CustomWalletButton } from '../../components/WalletProvider';
 
@@ -20,7 +21,7 @@ export default function MyTokensPage() {
   const { showToast } = useToast();
 
   const loadTokens = useCallback(async () => {
-    if (!publicKey) {
+    if (!publicKey || !connection) {
       setTokens([]);
       setLoading(false);
       return;
@@ -29,17 +30,9 @@ export default function MyTokensPage() {
     try {
       setLoading(true);
       console.log('Loading tokens for wallet:', publicKey.toString());
+      
+      // Get all token data in a single call
       const userTokens = await getUserTokens(connection, publicKey);
-      console.log('Loaded tokens with details:', userTokens.map(token => ({
-        name: token.name,
-        symbol: token.symbol,
-        mintAddress: token.mintAddress,
-        imageUrl: token.imageUrl,
-        supply: token.supply,
-        decimals: token.decimals,
-        isFrozen: token.isFrozen,
-        hasAuthority: token.hasAuthority
-      })));
       setTokens(userTokens);
     } catch (error) {
       console.error('Error loading tokens:', error);
@@ -47,11 +40,13 @@ export default function MyTokensPage() {
     } finally {
       setLoading(false);
     }
-  }, [publicKey, connection, showToast]);
+  }, [publicKey?.toString(), connection?.rpcEndpoint, showToast]);
 
   useEffect(() => {
-    loadTokens();
-  }, [loadTokens]);
+    if (publicKey && connection) {
+      loadTokens();
+    }
+  }, [loadTokens, publicKey, connection]);
 
   return (
     <div className="min-h-screen">

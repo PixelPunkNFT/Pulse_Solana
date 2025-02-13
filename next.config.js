@@ -22,6 +22,17 @@ const nextConfig = {
         hostname: '**',
       },
     ],
+  },
+  env: {
+    DB_LINK: process.env.DB_LINK,
+  },
+  serverRuntimeConfig: {
+    DB_LINK: process.env.DB_LINK,
+  },
+  publicRuntimeConfig: {
+    apiUrl: process.env.NODE_ENV === 'development' 
+      ? 'http://localhost:3000/api'
+      : '/api',
   }
 };
 

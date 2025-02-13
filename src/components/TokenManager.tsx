@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC, useState, useCallback } from 'react';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { TokenData } from '../types/token';
 import { burnToken, removeMintAuthority, toggleFreezeAccount } from '../utils/tokenManagement';
@@ -25,7 +25,7 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
   const explorerUrl = `https://explorer.solana.com/address/${token.mintAddress}?cluster=${network}`;
   const raydiumLiquidityUrl = `https://raydium.io/liquidity/add/?inputCurrency=SOL&outputCurrency=${token.mintAddress}`;
 
-  const handleBurnToken = async () => {
+  const handleBurnToken = useCallback(async () => {
     if (!publicKey || !signTransaction) return;
     if (!confirm('Sei sicuro di voler bruciare questo token? Questa azione non può essere annullata.')) return;
 
@@ -46,9 +46,9 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [connection, token.mintAddress, publicKey, signTransaction, showToast, onUpdate]);
 
-  const handleRemoveMintAuthority = async () => {
+  const handleRemoveMintAuthority = useCallback(async () => {
     if (!publicKey || !signTransaction) return;
     if (!confirm('Sei sicuro di voler rimuovere l\'autorità di minting? Questa azione non può essere annullata.')) return;
 
@@ -69,9 +69,9 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [connection, token.mintAddress, publicKey, signTransaction, showToast, onUpdate]);
 
-  const handleToggleFreeze = async () => {
+  const handleToggleFreeze = useCallback(async () => {
     if (!publicKey || !signTransaction) return;
     setIsLoading(true);
     try {
@@ -107,7 +107,7 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [connection, token.mintAddress, token.isFrozen, publicKey, signTransaction, showToast, onUpdate]);
 
   const formatSupply = (supply: number, decimals: number) => {
     const actualSupply = supply / Math.pow(10, decimals);

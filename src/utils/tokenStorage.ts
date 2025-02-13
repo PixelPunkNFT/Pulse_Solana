@@ -1,38 +1,66 @@
-const CREATED_TOKENS_KEY = 'created_tokens';
-
 export interface StoredToken {
   mintAddress: string;
   name: string;
   symbol: string;
   createdAt: number;
+  createdBy: string;
 }
 
-export function saveCreatedToken(token: StoredToken): void {
+export async function saveCreatedToken(token: Omit<StoredToken, 'createdAt'>): Promise<void> {
   try {
-    const existingTokens = getCreatedTokens();
-    existingTokens.push(token);
-    localStorage.setItem(CREATED_TOKENS_KEY, JSON.stringify(existingTokens));
+    console.log('Attempting to save token:', token);
+    console.log('Making POST request to /api/tokens');
+    const response = await fetch('/api/tokens', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(token),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      console.error('Server response:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorData
+      });
+      throw new Error(errorData.error || `Failed to save token: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    console.log('Token saved successfully:', result);
   } catch (error) {
-    console.error('Error saving token to localStorage:', error);
+    console.error('Error saving token:', error);
+    throw error;
   }
 }
 
-export function getCreatedTokens(): StoredToken[] {
+export async function getCreatedTokens(walletAddress: string): Promise<StoredToken[]> {
   try {
-    const tokens = localStorage.getItem(CREATED_TOKENS_KEY);
-    return tokens ? JSON.parse(tokens) : [];
+    const response = await fetch(`/api/tokens?wallet=${walletAddress}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch tokens');
+    }
+    const data = await response.json();
+    // Assicuriamoci che data sia un array
+    if (!Array.isArray(data)) {
+      console.error('Received non-array data from API:', data);
+      return [];
+    }
+    return data;
   } catch (error) {
-    console.error('Error reading tokens from localStorage:', error);
+    console.error('Error fetching tokens:', error);
     return [];
   }
 }
 
-export function isCreatedToken(mintAddress: string): boolean {
+export async function isCreatedToken(mintAddress: string, walletAddress: string): Promise<boolean> {
   try {
-    const tokens = getCreatedTokens();
+    const tokens = await getCreatedTokens(walletAddress);
     return tokens.some(token => token.mintAddress === mintAddress);
   } catch (error) {
-    console.error('Error checking token in localStorage:', error);
+    console.error('Error checking token:', error);
     return false;
   }
 }

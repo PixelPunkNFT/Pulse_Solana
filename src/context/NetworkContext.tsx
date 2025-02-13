@@ -1,6 +1,7 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useMemo, ReactNode, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { Connection, clusterApiUrl } from '@solana/web3.js';
 
@@ -15,29 +16,26 @@ const NetworkContext = createContext<NetworkContextType | undefined>(undefined);
 
 const QUICKNODE_RPC = "https://delicate-side-moon.solana-mainnet.quiknode.pro/c7831bf3202f0a2fe03e4fcc55f7e9c84e2bd8ec";
 
+const getEndpoint = (network: WalletAdapterNetwork) => 
+  network === WalletAdapterNetwork.Mainnet ? QUICKNODE_RPC : clusterApiUrl(network);
+
 export function NetworkProvider({ children }: { children: ReactNode }) {
   const [network, setNetwork] = useState<WalletAdapterNetwork>(WalletAdapterNetwork.Devnet);
-  const [endpoint, setEndpoint] = useState(clusterApiUrl(WalletAdapterNetwork.Devnet));
-  const [connection, setConnection] = useState(new Connection(clusterApiUrl(WalletAdapterNetwork.Devnet)));
+  const router = useRouter();
 
   useEffect(() => {
-    // Usa QuickNode RPC per mainnet e l'endpoint pubblico per devnet
-    const newEndpoint = network === WalletAdapterNetwork.Mainnet 
-      ? QUICKNODE_RPC 
-      : clusterApiUrl(network);
-    
-    setEndpoint(newEndpoint);
-    const newConnection = new Connection(newEndpoint, {
-      commitment: 'confirmed',
-      confirmTransactionInitialTimeout: 60000, // 60 secondi di timeout
-    });
-    setConnection(newConnection);
+    router.push('/token-creator');
+  }, [network, router]);
 
-    console.log('Network changed:', {
-      network,
-      endpoint: newEndpoint
-    });
-  }, [network]);
+  const endpoint = useMemo(() => getEndpoint(network), [network]);
+  
+  const connection = useMemo(() => 
+    new Connection(endpoint, {
+      commitment: 'confirmed',
+      confirmTransactionInitialTimeout: 60000
+    }), 
+    [endpoint]
+  );
 
   return (
     <NetworkContext.Provider value={{ network, setNetwork, endpoint, connection }}>

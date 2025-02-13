@@ -1,10 +1,17 @@
-'use client';
-
 import './globals.css';
 import { Providers } from '../components/Providers';
-import { ToastProvider } from '../components/Toast';
 import AnimatedBackground from '../components/AnimatedBackground';
 import '@solana/wallet-adapter-react-ui/styles.css';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Pulse',
+  description: 'Create your own token with bonding curve on Solana',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+  },
+};
 
 export default function RootLayout({
   children,
@@ -13,28 +20,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <title>Pulse</title>
-        <meta name="description" content="Create your own token with bonding curve on Solana" />
-        <link 
-          rel="icon" 
-          type="image/svg+xml" 
-          href="/favicon.svg" 
-        />
-        <link 
-          rel="shortcut icon" 
-          type="image/svg+xml" 
-          href="/favicon.svg" 
-        />
-      </head>
-      <body>
+      <body suppressHydrationWarning>
         <Providers>
-          <ToastProvider>
-            <AnimatedBackground />
-            <div className="relative">
-              {children}
-            </div>
-          </ToastProvider>
+          <AnimatedBackground />
+          <div className="relative">
+            {children}
+          </div>
         </Providers>
       </body>
     </html>

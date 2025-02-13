@@ -4,6 +4,7 @@ import { FC, useState, useCallback, useRef, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { createToken } from '../utils/tokenCreation';
 import { uploadToPinata, uploadMetadataJson } from '../utils/imageUpload';
+import { saveCreatedToken } from '../utils/tokenStorage';
 import { useToast } from './Toast';
 import { useNetwork } from '../context/NetworkContext';
 import { Transaction } from '@solana/web3.js';
@@ -16,7 +17,7 @@ export const TokenCreator: FC = () => {
   const { network, setNetwork, connection } = useNetwork();
   const [tokenName, setTokenName] = useState('');
   const [tokenSymbol, setTokenSymbol] = useState('');
-  const [totalSupply, setTotalSupply] = useState('1000000000'); // Default 1 billion
+  const [totalSupply, setTotalSupply] = useState<string>('1000000000'); // Default 1 billion
   const [isCreating, setIsCreating] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -155,7 +156,27 @@ export const TokenCreator: FC = () => {
         Number(totalSupply)
       );
 
-      console.log('Token created:', {
+      // Salva il token nel database
+      try {
+        await saveCreatedToken({
+          mintAddress,
+          name: tokenName,
+          symbol: tokenSymbol.toUpperCase(),
+          createdBy: publicKey.toString()
+        });
+        console.log('Token saved to database successfully');
+      } catch (dbError) {
+        console.error('Error saving token to database:', dbError);
+        showToast(
+          <div className="flex items-center space-x-2">
+            <span>❌</span>
+            <span>Errore nel salvare il token nel database: {dbError instanceof Error ? dbError.message : 'Errore sconosciuto'}</span>
+          </div>,
+          'error'
+        );
+      }
+
+      console.log('Token created and saved:', {
         mintAddress,
         signature,
         imageUrl,
