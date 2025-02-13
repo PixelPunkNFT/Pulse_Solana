@@ -70,7 +70,7 @@ export default function Home() {
             <div className="social-links-container mt-16 pt-8">
               <div className="flex justify-center items-center space-x-8">
                 <a 
-                  href="https://t.me/Pulse_solana" 
+                  href="https://t.me/Pulse_solana_chain" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="social-link w-40 h-12 rounded-xl flex items-center justify-center text-gray-300 hover:text-white"
