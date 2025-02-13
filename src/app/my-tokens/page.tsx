@@ -8,7 +8,7 @@ import { TokenManager } from '../../components/TokenManager';
 import { getUserTokens } from '../../utils/tokenManagement';
 import { useConnection } from '@solana/wallet-adapter-react';
 import { TokenData } from '../../types/token';
-import { getCreatedTokens, StoredToken } from '../../utils/tokenStorage';
+import { } from '../../utils/tokenStorage';
 import { useToast } from '../../components/Toast';
 import { CustomWalletButton } from '../../components/WalletProvider';
 
@@ -40,7 +40,7 @@ export default function MyTokensPage() {
     } finally {
       setLoading(false);
     }
-  }, [publicKey?.toString(), connection?.rpcEndpoint, showToast]);
+  }, [publicKey, connection, showToast]);
 
   useEffect(() => {
     if (publicKey && connection) {

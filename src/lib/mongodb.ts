@@ -6,16 +6,27 @@ if (!process.env.DB_LINK) {
 
 const MONGODB_URI: string = process.env.DB_LINK;
 
+interface MongoDBOptions {
+  bufferCommands: boolean;
+  autoCreate: boolean;
+  autoIndex: boolean;
+  maxPoolSize: number;
+  serverSelectionTimeoutMS: number;
+  socketTimeoutMS: number;
+}
+
 interface Cached {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
 }
 
+/* eslint-disable no-var */
 declare global {
   var mongooseCache: Cached;
 }
+/* eslint-enable no-var */
 
-let cached: Cached = global.mongooseCache || { conn: null, promise: null };
+const cached: Cached = global.mongooseCache || { conn: null, promise: null };
 
 if (!global.mongooseCache) {
   global.mongooseCache = cached;
@@ -27,7 +38,7 @@ async function dbConnect(): Promise<typeof mongoose> {
   }
 
   if (!cached.promise) {
-    const opts = {
+    const opts: MongoDBOptions = {
       bufferCommands: false,
       autoCreate: true,
       autoIndex: true,

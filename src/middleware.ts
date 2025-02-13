@@ -2,9 +2,6 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  // Ottieni l'header Origin dalla richiesta
-  const origin = request.headers.get('origin') || '';
-
   // Crea la risposta
   const response = NextResponse.next();
 
