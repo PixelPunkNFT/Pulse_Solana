@@ -47,21 +47,27 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-3xl mx-auto mb-20">
               <div className="elegant-card rounded-xl p-8">
-                <h3 className="text-xl font-medium text-white text-center mb-4">Build</h3>
+              <p className="text-gray-300 text-center font-light leading-relaxed">
+                Step 1</p>
+                <h3 className="text-xl font-medium text-white text-center mb-4">Create Token</h3>
                 <p className="text-gray-300 text-center font-light leading-relaxed">
-                Create and manage tokens on Solana with ease, complete with an admin dashboard.
+                Easily create your own Meme-Token on the Solana network in just a few simple steps
                 </p>
               </div>
               <div className="elegant-card rounded-xl p-8">
+              <p className="text-gray-300 text-center font-light leading-relaxed">
+              Step 2</p>
                 <h3 className="text-xl font-medium text-white text-center mb-4">Pulse Panel</h3>
                 <p className="text-gray-300 text-center font-light leading-relaxed">
                 The Pulse Panel allows you to manage your token with advanced features.
                 </p>
               </div>
               <div className="elegant-card rounded-xl p-8">
-                <h3 className="text-xl font-medium text-white text-center mb-4">Development fees.</h3>
+              <p className="text-gray-300 text-center font-light leading-relaxed">
+              Step 3</p>
+                <h3 className="text-xl font-medium text-white text-center mb-4">liquidity and Stats</h3>
                 <p className="text-gray-300 text-center font-light leading-relaxed">
-                The cost to create a contract is 0.027 SOL,market-leading low fee. 
+                You will be able to directly give liquidity on Raydium, and look at the graph of your meme. 
                 </p>
               </div>
             </div>
@@ -70,7 +76,7 @@ export default function Home() {
             <div className="social-links-container mt-16 pt-8">
               <div className="flex justify-center items-center space-x-8">
                 <a 
-                  href="https://t.me/Pulse_solana_chain" 
+                  href="https://t.me/pulse_solana" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="social-link w-40 h-12 rounded-xl flex items-center justify-center text-gray-300 hover:text-white"

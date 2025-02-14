@@ -170,7 +170,7 @@ export const TokenCreator: FC = () => {
         showToast(
           <div className="flex items-center space-x-2">
             <span>❌</span>
-            <span>Errore nel salvare il token nel database: {dbError instanceof Error ? dbError.message : 'Errore sconosciuto'}</span>
+            <span>Error saving token in database: {dbError instanceof Error ? dbError.message : 'Unknown error'}</span>
           </div>,
           'error'
         );
@@ -197,9 +197,9 @@ export const TokenCreator: FC = () => {
       // Show success message with link
       showToast(
         <div className="flex flex-col space-y-2">
-          <div className="font-bold">🎉 Token creato con successo!</div>
+          <div className="font-bold">🎉 Token created successfully!</div>
           <div>
-            Visualizza su{' '}
+          View on{' '}
             <a 
               href={explorerUrl} 
               target="_blank" 
@@ -231,19 +231,19 @@ export const TokenCreator: FC = () => {
 
     } catch (error) {
       console.error('Error creating token:', error);
-      let errorMessage = 'Errore nella creazione del token';
+      let errorMessage = 'Error creating token';
       
       if (error instanceof Error) {
         if (error.message.includes('Failed to connect')) {
-          errorMessage = `Errore di connessione alla rete ${network}. Riprova più tardi.`;
+          errorMessage = `Network connection error ${network}. Please try again later.`;
         } else if (error.message.includes('insufficient balance')) {
-          errorMessage = 'Saldo insufficiente per creare il token';
+          errorMessage = 'Insufficient balance to create token';
         } else if (error.message.includes('Transaction failed')) {
-          errorMessage = 'Transazione fallita. Verifica il saldo e riprova.';
+          errorMessage = 'Transaction failed. Check your balance and try again.';
         } else if (error.message.includes('User rejected')) {
-          errorMessage = 'Transazione rifiutata dall\'utente';
+          errorMessage = 'Transaction rejected by user';
         } else if (error.message.includes('403')) {
-          errorMessage = `Errore di accesso alla rete ${network}. Riprova più tardi.`;
+          errorMessage = `Network connection error ${network}. Please try again later.`;
         } else {
           errorMessage = error.message;
         }

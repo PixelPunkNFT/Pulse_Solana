@@ -1,6 +1,7 @@
 import './globals.css';
 import { Providers } from '../components/Providers';
 import AnimatedBackground from '../components/AnimatedBackground';
+import { Navbar } from '../components/Navbar';
 import '@solana/wallet-adapter-react-ui/styles.css';
 import { Metadata } from 'next';
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <Providers>
           <AnimatedBackground />
+          <Navbar />
           <div className="relative">
             {children}
           </div>

@@ -261,7 +261,7 @@ export async function getTokenData(
         imageUrl: imageUrl,
         supply: Number(mintInfo.supply),
         decimals: mintInfo.decimals,
-        isFrozen: mintInfo.freezeAuthority !== null,
+        isFrozen: tokenAccount.isFrozen,
         hasAuthority: mintInfo.mintAuthority !== null,
       };
     } catch (error) {

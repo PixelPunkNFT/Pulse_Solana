@@ -90,8 +90,8 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
       );
       showToast(
         token.isFrozen 
-          ? '🌞 Token scongelato con successo'
-          : '❄️ Token congelato con successo',
+          ? '🌞 Token successfully thawed'
+          : '❄️ Token frozen successfully',
         'success'
       );
       onUpdate();
@@ -100,7 +100,7 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
       showToast(
         <div className="flex items-center space-x-2">
           <span>❌</span>
-          <span>{error instanceof Error ? error.message : 'Errore nel modificare lo stato di congelamento'}</span>
+          <span>{error instanceof Error ? error.message : 'Error changing freeze state'}</span>
         </div>,
         'error'
       );

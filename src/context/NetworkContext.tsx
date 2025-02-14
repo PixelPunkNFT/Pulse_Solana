@@ -24,7 +24,15 @@ export function NetworkProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    router.push('/token-creator');
+    // Redirect only when network changes, not on initial mount
+    const handleNetworkChange = () => {
+      router.push('/token-creator');
+    };
+
+    // Skip initial mount
+    if (network !== WalletAdapterNetwork.Devnet) {
+      handleNetworkChange();
+    }
   }, [network, router]);
 
   const endpoint = useMemo(() => getEndpoint(network), [network]);
