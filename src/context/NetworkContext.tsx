@@ -14,10 +14,12 @@ interface NetworkContextType {
 
 const NetworkContext = createContext<NetworkContextType | undefined>(undefined);
 
-const QUICKNODE_RPC = "https://delicate-side-moon.solana-mainnet.quiknode.pro/c7831bf3202f0a2fe03e4fcc55f7e9c84e2bd8ec";
-
-const getEndpoint = (network: WalletAdapterNetwork) => 
-  network === WalletAdapterNetwork.Mainnet ? QUICKNODE_RPC : clusterApiUrl(network);
+const getEndpoint = (network: WalletAdapterNetwork) => {
+  if (network === WalletAdapterNetwork.Mainnet) {
+    return process.env.NEXT_PUBLIC_MAINNET_RPC_HOST || clusterApiUrl(network);
+  }
+  return process.env.NEXT_PUBLIC_SOLANA_RPC_HOST || clusterApiUrl(network);
+};
 
 export function NetworkProvider({ children }: { children: ReactNode }) {
   const [network, setNetwork] = useState<WalletAdapterNetwork>(WalletAdapterNetwork.Devnet);
