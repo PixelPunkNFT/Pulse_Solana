@@ -146,6 +146,12 @@ export const TokenCreator: FC = () => {
         return signed as Transaction;
       };
 
+      // Validate and convert totalSupply
+      const supply = parseInt(totalSupply);
+      if (isNaN(supply) || supply <= 0) {
+        throw new Error('Invalid total supply value');
+      }
+
       const { mintAddress, signature } = await createToken(
         connection,
         publicKey,
@@ -153,7 +159,7 @@ export const TokenCreator: FC = () => {
         tokenSymbol.toUpperCase(),
         metadataUrl,
         signTransactionWrapper,
-        Number(totalSupply)
+        supply
       );
 
       // Save token to database

@@ -117,13 +117,19 @@ export async function createToken(
       )
     );
 
+    // Convert totalSupply to BigInt and handle decimals
+    const decimals = 9; // 9 decimals like SOL
+    const multiplier = BigInt(10 ** decimals);
+    const totalSupplyBigInt = BigInt(Math.floor(totalSupply)); // Ensure integer
+    const finalAmount = totalSupplyBigInt * multiplier;
+
     // Add mint tokens instruction with custom total supply
     transaction.add(
       createMintToInstruction(
         mintKeypair.publicKey,
         associatedTokenAddress,
         payer,
-        totalSupply * (10 ** 9) // Convert to smallest units considering 9 decimals
+        finalAmount
       )
     );
 
