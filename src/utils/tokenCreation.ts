@@ -54,45 +54,7 @@ export async function createToken(
     }
     console.log('Network connection verified');
 
-    // Crea la transazione per il pagamento
-    const feeTransaction = new Transaction();
-    const feeAmount = Number(process.env.NEXT_PUBLIC_TOKEN_CREATE_FEE) * LAMPORTS_PER_SOL;
-    const feeReceiverWallet = new PublicKey(process.env.NEXT_PUBLIC_FEE_RECEIVER_WALLET!);
-
-    // Aggiungi l'istruzione di trasferimento SOL
-    feeTransaction.add(
-      SystemProgram.transfer({
-        fromPubkey: payer,
-        toPubkey: feeReceiverWallet,
-        lamports: feeAmount,
-      })
-    );
-
-    // Ottieni il blockhash per la transazione di pagamento
-    const { blockhash: feeBlockhash, lastValidBlockHeight: feeLastValidBlockHeight } = 
-      await connection.getLatestBlockhash('finalized');
-    feeTransaction.recentBlockhash = feeBlockhash;
-    feeTransaction.feePayer = payer;
-
-    // Firma e invia la transazione di pagamento
-    console.log('Getting fee transaction signed by wallet...');
-    const signedFeeTransaction = await signTransaction(feeTransaction);
-    
-    console.log('Sending fee transaction...');
-    const feeSignature = await connection.sendRawTransaction(signedFeeTransaction.serialize());
-    
-    console.log('Waiting for fee transaction confirmation...');
-    const feeConfirmation = await connection.confirmTransaction({
-      blockhash: feeBlockhash,
-      lastValidBlockHeight: feeLastValidBlockHeight,
-      signature: feeSignature
-    }, 'confirmed');
-
-    if (feeConfirmation.value.err) {
-      throw new Error('Fee transaction failed');
-    }
-
-    // Procedi con la creazione del token
+    // Inizia la creazione del token
     const mintKeypair = Keypair.generate();
     console.log('Generated mint keypair:', mintKeypair.publicKey.toString());
 
@@ -109,8 +71,20 @@ export async function createToken(
     );
     console.log('Associated token address:', associatedTokenAddress.toString());
 
-    // Create transaction
+    // Crea la transazione principale che includerà sia la fee che la creazione del token
     const transaction = new Transaction();
+
+    // Aggiungi l'istruzione per il pagamento della fee
+    const feeAmount = Number(process.env.NEXT_PUBLIC_TOKEN_CREATE_FEE) * LAMPORTS_PER_SOL;
+    const feeReceiverWallet = new PublicKey(process.env.NEXT_PUBLIC_FEE_RECEIVER_WALLET!);
+    
+    transaction.add(
+      SystemProgram.transfer({
+        fromPubkey: payer,
+        toPubkey: feeReceiverWallet,
+        lamports: feeAmount,
+      })
+    );
 
     // Add create account instruction
     transaction.add(
@@ -217,7 +191,7 @@ export async function createToken(
       };
     } catch (error) {
       if (error instanceof Error && error.message.includes('User rejected')) {
-        throw new Error('Transazione rifiutata dall\'utente. Per favore approva la transazione nel wallet.');
+        throw new Error('Transaction rejected by user. Please approve the transaction in the wallet.');
       }
       throw error;
     }

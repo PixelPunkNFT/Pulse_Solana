@@ -22,10 +22,10 @@ interface PinataPin {
 
 async function getPinataMetadata(name: string): Promise<Record<string, unknown> | null> {
   try {
-    // Costruisci il nome del file metadata come fatto in uploadMetadataJson
+    // Build metadata filename as done in uploadMetadataJson
     const metadataName = `${name.toLowerCase()}-metadata.json`;
     
-    // Query Pinata per ottenere il metadata
+    // Query Pinata to get metadata
     const response = await fetch('https://api.pinata.cloud/data/pinList', {
       method: 'GET',
       headers: {
@@ -39,7 +39,7 @@ async function getPinataMetadata(name: string): Promise<Record<string, unknown> 
 
     const data = await response.json();
     
-    // Cerca il file metadata.json corrispondente
+    // Find corresponding metadata.json file
     const metadataPin = data.rows.find((pin: PinataPin) => 
       pin.metadata.name === metadataName
     );
@@ -49,7 +49,7 @@ async function getPinataMetadata(name: string): Promise<Record<string, unknown> 
       return null;
     }
 
-    // Recupera il contenuto del metadata.json
+    // Get metadata.json content
     const metadataUrl = `https://harlequin-informal-hawk-522.mypinata.cloud/ipfs/${metadataPin.ipfs_pin_hash}`;
     const metadataResponse = await fetch(metadataUrl);
     
@@ -234,7 +234,7 @@ export async function getTokenData(
     
     try {
       const tokenAccount = await getAccount(connection, associatedTokenAddress);
-      // Se il saldo è 0, restituisci null
+      // If balance is 0, return null
       if (tokenAccount.amount === BigInt(0)) {
         return null;
       }
@@ -245,7 +245,7 @@ export async function getTokenData(
 
       let imageUrl = '';
       
-      // Se abbiamo il nome del token, proviamo a recuperare il metadata da Pinata
+      // If we have the token name, try to retrieve metadata from Pinata
       if (storedToken?.name) {
         const metadata = await getPinataMetadata(storedToken.name);
         if (metadata && 'image' in metadata && typeof metadata.image === 'string') {
@@ -302,7 +302,7 @@ export async function getUserTokens(
     console.log('Filtering and mapping token accounts...');
     const tokens = response.value
       .filter(accountInfo => 
-        // Filtra solo i token con saldo maggiore di 0 e che sono stati creati da questa app
+        // Filter only tokens with balance greater than 0 and created by this app
         accountInfo.account.data.parsed.info.tokenAmount.uiAmount > 0 &&
         createdTokenAddresses.has(accountInfo.account.data.parsed.info.mint)
       )
@@ -318,7 +318,7 @@ export async function getUserTokens(
     );
     const tokenData = await Promise.all(tokenDataPromises);
 
-    // Filtra eventuali token null (burnati o non esistenti)
+    // Filter out any null tokens (burned or non-existent)
     return tokenData.filter((token): token is TokenData => token !== null);
   } catch (error) {
     console.error('Error getting user tokens:', error);

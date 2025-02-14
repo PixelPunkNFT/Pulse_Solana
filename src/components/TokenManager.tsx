@@ -27,19 +27,19 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
 
   const handleBurnToken = useCallback(async () => {
     if (!publicKey || !signTransaction) return;
-    if (!confirm('Sei sicuro di voler bruciare questo token? Questa azione non può essere annullata.')) return;
+    if (!confirm('Are you sure you want to burn this token? This action cannot be undone.')) return;
 
     setIsLoading(true);
     try {
       await burnToken(connection, token.mintAddress, publicKey, signTransaction);
-      showToast('🔥 Token bruciato con successo', 'success');
+      showToast('🔥 Token burned successfully', 'success');
       onUpdate();
     } catch (error) {
       console.error('Error burning token:', error);
       showToast(
         <div className="flex items-center space-x-2">
           <span>❌</span>
-          <span>{error instanceof Error ? error.message : 'Errore nel bruciare il token'}</span>
+          <span>{error instanceof Error ? error.message : 'Error burning token'}</span>
         </div>,
         'error'
       );
@@ -50,19 +50,19 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
 
   const handleRemoveMintAuthority = useCallback(async () => {
     if (!publicKey || !signTransaction) return;
-    if (!confirm('Sei sicuro di voler rimuovere l\'autorità di minting? Questa azione non può essere annullata.')) return;
+    if (!confirm('Are you sure you want to remove the minting authority? This action cannot be undone.')) return;
 
     setIsLoading(true);
     try {
       await removeMintAuthority(connection, token.mintAddress, publicKey, signTransaction);
-      showToast('🔒 Autorità di minting rimossa con successo', 'success');
+      showToast('🔒 Minting authority removed successfully', 'success');
       onUpdate();
     } catch (error) {
       console.error('Error removing mint authority:', error);
       showToast(
         <div className="flex items-center space-x-2">
           <span>❌</span>
-          <span>{error instanceof Error ? error.message : 'Errore nella rimozione dell\'autorità di minting'}</span>
+          <span>{error instanceof Error ? error.message : 'Error removing minting authority'}</span>
         </div>,
         'error'
       );
@@ -119,7 +119,7 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
 
   return (
     <div className="relative group">
-      <div className="bg-gray-800/20 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30 group-hover:border-primary-500/30 transition-all duration-500 transform hover:scale-105 group-hover:z-10 group-hover:shadow-2xl group-hover:shadow-primary-500/10 hover:bg-gray-800/30">
+      <div className="bg-gray-800/20 rounded-2xl p-6 border border-gray-700/30 group-hover:border-primary-500/30 transition-all duration-500 transform hover:scale-105 group-hover:z-10 group-hover:shadow-2xl group-hover:shadow-primary-500/10 hover:bg-gray-800/30">
         <div className="flex items-center space-x-4 mb-6">
           {token.imageUrl && (
             <div className="relative w-16 h-16">
@@ -153,14 +153,14 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
           <div>
             <p className="text-xs text-gray-400 mb-1">Status</p>
             <div className="flex gap-2">
-              <span className={`text-xs px-2 py-1 rounded-full backdrop-blur-sm transition-all duration-300 ${
+              <span className={`text-xs px-2 py-1 rounded-full transition-all duration-300 ${
                 token.hasAuthority 
                 ? 'bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/30' 
                 : 'bg-rose-500/10 text-rose-400 ring-1 ring-rose-500/30'
               }`}>
                 {token.hasAuthority ? 'Mintable' : 'Not Mintable'}
               </span>
-              <span className={`text-xs px-2 py-1 rounded-full backdrop-blur-sm transition-all duration-300 ${
+              <span className={`text-xs px-2 py-1 rounded-full transition-all duration-300 ${
                 token.isFrozen 
                 ? 'bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/30' 
                 : 'bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/30'
@@ -176,7 +176,7 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
             href={explorerUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group/button relative px-2.5 py-2 bg-violet-500/10 hover:bg-violet-500/20 text-violet-400 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 backdrop-blur-sm ring-1 ring-violet-500/30 hover:ring-violet-500/50 transform hover:translate-x-1"
+            className="group/button relative px-2.5 py-2 bg-violet-500/10 hover:bg-violet-500/20 text-violet-400 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 ring-1 ring-violet-500/30 hover:ring-violet-500/50 transform hover:translate-x-1"
           >
             <span className="font-medium">Explorer</span>
             <div className="relative w-4 h-4">
@@ -190,7 +190,7 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
             href={raydiumLiquidityUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group/button relative px-2.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 backdrop-blur-sm ring-1 ring-emerald-500/30 hover:ring-emerald-500/50 transform hover:translate-x-1"
+            className="group/button relative px-2.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 ring-1 ring-emerald-500/30 hover:ring-emerald-500/50 transform hover:translate-x-1"
           >
             <span className="font-medium">Liquidity</span>
             <div className="relative w-4 h-4">
@@ -202,7 +202,7 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
 
           <Link
             href={`/token-stats/${token.mintAddress}`}
-            className="group/button relative px-2.5 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 backdrop-blur-sm ring-1 ring-blue-500/30 hover:ring-blue-500/50 transform hover:translate-x-1"
+            className="group/button relative px-2.5 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 ring-1 ring-blue-500/30 hover:ring-blue-500/50 transform hover:translate-x-1"
           >
             <span className="font-medium">Stats</span>
             <div className="relative w-4 h-4">
@@ -215,7 +215,7 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
           <button
             onClick={handleToggleFreeze}
             disabled={isLoading || !token.hasAuthority}
-            className={`group/button relative px-2.5 py-2 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 backdrop-blur-sm transform hover:translate-x-1 ${
+            className={`group/button relative px-2.5 py-2 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 transform hover:translate-x-1 ${
               isLoading
                 ? 'bg-gray-500/10 text-gray-400 ring-1 ring-gray-500/30 cursor-not-allowed'
                 : token.isFrozen
@@ -235,7 +235,7 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
             <button
               onClick={handleRemoveMintAuthority}
               disabled={isLoading}
-              className={`group/button relative px-2.5 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 backdrop-blur-sm ring-1 ring-amber-500/30 hover:ring-amber-500/50 transform hover:translate-x-1 ${
+              className={`group/button relative px-2.5 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 ring-1 ring-amber-500/30 hover:ring-amber-500/50 transform hover:translate-x-1 ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
@@ -251,7 +251,7 @@ export const TokenManager: FC<TokenManagerProps> = ({ token, onUpdate }) => {
           <button
             onClick={handleBurnToken}
             disabled={isLoading}
-            className={`group/button relative px-2.5 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 backdrop-blur-sm ring-1 ring-rose-500/30 hover:ring-rose-500/50 transform hover:translate-x-1 ${
+            className={`group/button relative px-2.5 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg text-xs flex items-center justify-between space-x-1 transition-all duration-300 ring-1 ring-rose-500/30 hover:ring-rose-500/50 transform hover:translate-x-1 ${
               isLoading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >

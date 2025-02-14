@@ -18,6 +18,16 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+/* Nascondi la barra di scorrimento mantenendo la funzionalità di scroll */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Per Firefox */
+* {
+  scrollbar-width: none;
+}
+
 .animated-background {
   position: fixed;
   top: 0;

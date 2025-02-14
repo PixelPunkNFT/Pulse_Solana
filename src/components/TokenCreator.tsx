@@ -24,7 +24,7 @@ export const TokenCreator: FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { showToast } = useToast();
 
-  // Sincronizza la rete con il wallet
+  // Sync network with wallet
   useEffect(() => {
     const syncNetwork = async () => {
       if (wallet?.adapter) {
@@ -32,7 +32,7 @@ export const TokenCreator: FC = () => {
           // @ts-expect-error - Phantom wallet specific
           const provider = wallet.adapter._provider;
           if (provider) {
-            // Ottieni la rete direttamente da Phantom
+            // Get network directly from Phantom
             const phantomNetwork = await provider.request({ method: 'solana-network' });
             const newNetwork = phantomNetwork === 'mainnet-beta' ? 
               WalletAdapterNetwork.Mainnet : 
@@ -56,7 +56,7 @@ export const TokenCreator: FC = () => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        showToast('🚫 L\'immagine deve essere inferiore a 5MB', 'error');
+        showToast('🚫 Image must be less than 5MB', 'error');
         return;
       }
       setImageFile(file);
@@ -70,31 +70,31 @@ export const TokenCreator: FC = () => {
 
   const validateInput = useCallback(() => {
     if (!tokenName.trim()) {
-      showToast('⚠️ Inserisci il nome del token', 'error');
+      showToast('⚠️ Please enter a token name', 'error');
       return false;
     }
     if (!tokenSymbol.trim()) {
-      showToast('⚠️ Inserisci il simbolo del token', 'error');
+      showToast('⚠️ Please enter a token symbol', 'error');
       return false;
     }
     if (!imageFile) {
-      showToast('⚠️ Seleziona un\'immagine per il token', 'error');
+      showToast('⚠️ Please select a token image', 'error');
       return false;
     }
     if (!totalSupply || isNaN(Number(totalSupply)) || Number(totalSupply) <= 0) {
-      showToast('⚠️ Inserisci una total supply valida', 'error');
+      showToast('⚠️ Please enter a valid total supply', 'error');
       return false;
     }
     if (!publicKey) {
-      showToast('🔗 Connetti il wallet per creare il token', 'error');
+      showToast('🔗 Please connect your wallet to create a token', 'error');
       return false;
     }
     if (!signTransaction) {
-      showToast('🔗 Il wallet non supporta la firma delle transazioni', 'error');
+      showToast('🔗 Wallet does not support transaction signing', 'error');
       return false;
     }
     if (!connection) {
-      showToast(`⚠️ Impossibile connettersi alla rete ${network}`, 'error');
+      showToast(`⚠️ Unable to connect to network ${network}`, 'error');
       return false;
     }
     return true;
@@ -107,7 +107,7 @@ export const TokenCreator: FC = () => {
     try {
       setIsCreating(true);
 
-      // Verifica che la rete del wallet corrisponda
+      // Verify that wallet network matches
       // @ts-expect-error - Phantom wallet specific
       const provider = wallet.adapter._provider;
       if (provider) {
@@ -118,7 +118,7 @@ export const TokenCreator: FC = () => {
 
         if (network !== walletNetwork) {
           showToast(
-            `⚠️ La rete del wallet (${phantomNetwork}) non corrisponde alla rete selezionata (${network}). Cambia la rete nel wallet.`,
+            `⚠️ Wallet network (${phantomNetwork}) does not match selected network (${network}). Please change the network in your wallet.`,
             'error'
           );
           return;
@@ -126,12 +126,12 @@ export const TokenCreator: FC = () => {
       }
 
       // Step 1: Upload image to Pinata and get the complete URL
-      showToast('🖼️ Caricamento immagine in corso...', 'info');
+      showToast('🖼️ Uploading image...', 'info');
       const imageUrl = await uploadToPinata(imageFile);
       console.log('Image URL:', imageUrl);
 
       // Step 2: Create metadata.json with image URL in uri field and upload to Pinata
-      showToast('📝 Creazione metadata in corso...', 'info');
+      showToast('📝 Creating metadata...', 'info');
       const metadataUrl = await uploadMetadataJson(
         tokenName,
         tokenSymbol.toUpperCase(),
@@ -140,7 +140,7 @@ export const TokenCreator: FC = () => {
       console.log('Metadata URL:', metadataUrl);
 
       // Step 3: Create token using metadata URL
-      showToast(`🪙 Creazione token sulla rete ${network} in corso...`, 'info');
+      showToast(`🪙 Creating token on ${network} network...`, 'info');
       const signTransactionWrapper = async (transaction: Transaction): Promise<Transaction> => {
         const signed = await signTransaction(transaction);
         return signed as Transaction;
@@ -156,7 +156,7 @@ export const TokenCreator: FC = () => {
         Number(totalSupply)
       );
 
-      // Salva il token nel database
+      // Save token to database
       try {
         await saveCreatedToken({
           mintAddress,
@@ -265,7 +265,7 @@ export const TokenCreator: FC = () => {
     return (
       <div className="flex flex-col items-center space-y-4">
         <div className="text-center text-gray-400 mb-4">
-          Connetti il wallet per creare un token
+          Connect your wallet to create a token
         </div>
         <CustomWalletButton />
       </div>
